@@ -17,8 +17,8 @@ token = "<tfe-token-here>"
 oauth_token = "<github-token>"
 vcs_repo = "<github-repo>"
 ```
-
-#### Notes on flattening
+<details>
+  <summary>Notes on flattening</summary>
 Create a map to figure out how many projects we need per org 
 `local.workspace_map`
 ```
@@ -115,3 +115,4 @@ workspace_names = [
   },
 ]
 ```
+</details>
