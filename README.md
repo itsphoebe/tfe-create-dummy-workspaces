@@ -4,9 +4,9 @@ Creates dummy org, project, workspaces for TFE with variable #s to create looots
 
 VCS for the workspace will point to /create-random-stuff which creates null resources and outputs a random string. 
 
-Creates # of orgs based on var.org_count  - defaults to 2
-Creates # of projects per org based on var.org_count - defaults to 2
-Creates # of workspaces per project based on var.workspaces_per_project - defaults to 2
+- Creates # of orgs based on var.org_count  - defaults to 2
+- Creates # of projects per org based on var.org_count - defaults to 2
+- Creates # of workspaces per project based on var.workspaces_per_project - defaults to 2
 
 Built off: [Workspacer Module](https://github.com/alexbasista/terraform-tfe-workspacer/tree/main)
 
