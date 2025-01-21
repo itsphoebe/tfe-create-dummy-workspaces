@@ -19,6 +19,7 @@ vcs_repo = "<github-repo>"
 ```
 <details>
   <summary>Notes on flattening</summary>
+  
 Create a map to figure out how many projects we need per org 
 `local.workspace_map`
 ```
