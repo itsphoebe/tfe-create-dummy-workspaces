@@ -1,6 +1,6 @@
 # tfe-create-dummy-workspaces
 
-Creates dummy org, project, workspaces for TFE with variable #s to create looots quickly. 
+Creates dummy org, project, workspaces for TFE with variable #s to create looots of nested workspaces quickly. With defaults, creates 2 orgs, with 2 projects per org, with 2 workspaces per project. 
 
 VCS for the workspace will point to /create-random-stuff which creates null resources and outputs a random string. 
 
