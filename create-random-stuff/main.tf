@@ -3,7 +3,7 @@ provider "null" {}
 resource "null_resource" "dummy" {}
 
 resource "random_string" "random" {
-  length  = 17
+  length  = 16
   special = false
 }
 
