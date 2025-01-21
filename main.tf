@@ -10,27 +10,45 @@ resource "tfe_organization" "dummy_org" {
 }
 
 locals {
-  project_map ={
+  # Create a map of organizations, projects, and workspaces
+  workspace_map = {
     for org in tfe_organization.dummy_org : org.name => {
       for i in range(var.projects_per_org) : "project-${i + 1}" => {
-        organization = org.name
-        workspace_index_counter = i + 1
+        for j in range(var.workspaces_per_project) : "workspace-${j + 1}-project-${i + 1}" => {
+          organization = org.name
+          project = "project-${i + 1}"
+        }
       }
     }
   }
 
-  flat_project_map = flatten([ for org_name, proj_map in local.project_map: [
+  # Flatted map of projects per organization
+  flat_project_map = flatten([ for org_name, proj_map in local.workspace_map: [
     for proj_name, proj_value in proj_map: { 
-      workspace_index_counter = proj_value.workspace_index_counter,
       project_name = proj_name, 
       organization = org_name 
     }]
   ])
+
+  # Flatted map of workspaces per project
+  flat_workspace_map = flatten([for org_name, proj_map in local.workspace_map: [
+    for proj_name, workspace_map in proj_map: [
+      for workspace_name, workspace_value in workspace_map: {
+        organization = org_name
+        project = proj_name
+        workspace_name = workspace_name
+      }
+    ]
+  ]])
 }
 
-output "project_names" {
-  value = local.flat_project_map
-}
+# output "project_names" {
+#   value = local.flat_project_map
+# }
+
+# output "workspace_names" {
+#   value = local.flat_workspace_map
+# }
 
 resource "tfe_project" "test" {
   for_each = { for idx, proj in local.flat_project_map: "${proj.project_name}-${proj.organization}" => proj}
@@ -53,16 +71,16 @@ resource "tfe_oauth_client" "tfe_oath" {
 module "workspacer" {
   depends_on = [ tfe_project.test ]
 
-  for_each = { for idx, proj in local.flat_project_map: "${proj.project_name}-${proj.organization}" => proj}
+  for_each = { for workspace in local.flat_workspace_map: "${workspace.workspace_name}-${workspace.project}-${workspace.organization}" => workspace}
 
   source  = "alexbasista/workspacer/tfe"
 
   organization   = each.value.organization
   force_delete = true
-  workspace_name = "dummy-workspace-${each.value.workspace_index_counter}"
+  workspace_name = each.value.workspace_name
   workspace_desc = "Created by 'workspacer' Terraform module."
   workspace_tags = ["app:acme", "env:test", "cloud:aws"]
-  project_name = each.value.project_name
+  project_name = each.value.project
   working_directory     = "create-random-stuff/"
   auto_apply            = true
   file_triggers_enabled = true

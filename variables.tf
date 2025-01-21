@@ -16,3 +16,6 @@ variable "org_count" {
 variable "projects_per_org" {
   default = 2
 }
+variable "workspaces_per_project" {
+  default = 2
+}
