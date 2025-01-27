@@ -57,6 +57,7 @@ resource "tfe_project" "test" {
   name         = each.value.project_name
 }
 
+# Creates a team per organization
 resource "tfe_team" "test" {
   for_each = { for idx, proj in local.flat_project_map : index(local.flat_project_map, proj) => proj}
 
@@ -100,5 +101,21 @@ module "workspacer" {
     oauth_token_id     = tfe_oauth_client.tfe_oath[each.value.organization].oauth_token_id
     ingress_submodules = false
     tags_regex         = null
+  }
+
+  tfvars = {
+    example_var = "example_value"
+  }
+
+  tfvars_sensitive = {
+    example_sensitive_var = "example_sensitive_value"
+  }
+
+  envvars = {
+    AWS_ACCESS_KEY_ID = "TH1S1SNOTAREAL@CC3SSK3Y"
+  }
+
+  envvars_sensitive = {
+    AWS_SECRET_ACCESS_KEY = "TH1S1$NOTAREALS3CR3TK3Y!"
   }
 }
